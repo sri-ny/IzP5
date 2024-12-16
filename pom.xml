@@ -28,15 +28,21 @@
             <version>5.2.3</version>
             <!-- <scope>provided</scope> -->
         </dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>org.codehaus.izpack</groupId>
 			<artifactId>izpack-install</artifactId>
 			<version>5.2.3</version>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>org.codehaus.izpack</groupId>
 			<artifactId>izpack-util</artifactId>
 			<version>5.2.3</version>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.izpack</groupId>
+			<artifactId>izpack-panel</artifactId>
+			<version>5.2.3</version>
+			<!-- <scope>compile</scope> -->
 		</dependency>
 		<dependency>
 			<groupId>org.codehaus.izpack</groupId>
