@@ -50,6 +50,7 @@ public class ProcessingJob {
 
         return true;
     }
+
     class JobLogHandler implements AbstractUIProcessHandler {
         AbstractUIProcessHandler oldHandler;
         PrintWriter jobLogWriter;
@@ -91,12 +92,6 @@ public class ProcessingJob {
         public void emitError(String title, String message) {
             writeToLog("ERROR EMITTED: " + message);
             this.oldHandler.emitError(title, message);
-        }
-
-        @Override
-        public void emitErrorAndBlockNext(String title, String message) {
-            writeToLog("ERROR EMITTED: " + message);
-            this.oldHandler.emitErrorAndBlockNext(title, message);
         }
         @Override
         public int askQuestion(String title, String question, int choices) {

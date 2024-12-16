@@ -8,7 +8,6 @@ import com.izforge.izpack.installer.data.GUIInstallData;
 import com.izforge.izpack.installer.gui.InstallerFrame;
 import com.izforge.izpack.installer.gui.IzPanel;
 import com.izforge.izpack.util.PlatformModelMatcher;
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -93,7 +92,6 @@ public class XstProcessPanel extends IzPanel implements AbstractUIProcessHandler
             parent.lockPrevButton();
         });
     }
-
     @Override
     public void finishProcessing(final boolean unlockPrev, final boolean unlockNext) {
         SwingUtilities.invokeLater(() -> {
@@ -170,7 +168,6 @@ public class XstProcessPanel extends IzPanel implements AbstractUIProcessHandler
             }
         });
     }
-
     @Override
     public void panelActivate() {
         Dimension dimension = parent.getPanelsContainerSize();
