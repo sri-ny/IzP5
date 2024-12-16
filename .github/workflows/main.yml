@@ -3,7 +3,7 @@ name: Build IzPack Installer with Custom Panels
 on:
   push:
     branches:
-      - master
+      - main
 
 jobs:
   build:
