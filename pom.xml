@@ -10,70 +10,41 @@
     <name>Custom IzPack Installer</name>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.codehaus.izpack</groupId>
-            <artifactId>izpack-core</artifactId>
+            <artifactId>izpack-dist</artifactId>
             <version>5.2.3</version>
-            <scope>provided</scope>
+            <scope>compile</scope>
         </dependency>
-        <dependency>
-            <groupId>org.codehaus.izpack</groupId>
-            <artifactId>izpack-api</artifactId>
-            <version>5.2.3</version>
-            <!-- <scope>provided</scope> -->
-        </dependency>
-		<!-- <dependency>
-			<groupId>org.codehaus.izpack</groupId>
-			<artifactId>izpack-install</artifactId>
-			<version>5.2.3</version>
-		</dependency> -->
-		<dependency>
-			<groupId>org.codehaus.izpack</groupId>
-			<artifactId>izpack-util</artifactId>
-			<version>5.2.3</version>
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.izpack</groupId>
-			<artifactId>izpack-panel</artifactId>
-			<version>5.2.3</version>
-			<!-- <scope>compile</scope> -->
-		</dependency>
-		<dependency>
-			<groupId>org.codehaus.izpack</groupId>
-			<artifactId>izpack-dist</artifactId>
-			<version>5.2.3</version>
-			<scope>compile</scope>
-		</dependency>
-
-	</dependencies>
+    </dependencies>
 
     <build>
         <plugins>
             <plugin>
-				<groupId>org.codehaus.izpack</groupId>
-				<artifactId>izpack-maven-plugin</artifactId>
-				<version>5.2.3</version>
-				<executions>
-					<execution>
-						<id>build-installer</id>
-						<goals>
-							<goal>izpack</goal> <!-- Use 'izpack' as the goal -->
-						</goals>
-						<phase>package</phase>
-					</execution>
-				</executions>
-				<configuration>
-					<input>${project.basedir}/src/main/resources/install.xml</input>
-					<basedir>${project.basedir}</basedir>
-					<output>${project.build.directory}/custom-installer.jar</output>
-				</configuration>
-			</plugin>
+                <groupId>org.codehaus.izpack</groupId>
+                <artifactId>izpack-maven-plugin</artifactId>
+                <version>5.2.3</version>
+                <executions>
+                    <execution>
+                        <id>build-installer</id>
+                        <goals>
+                            <goal>izpack</goal>
+                        </goals>
+                        <phase>package</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <input>${project.basedir}/src/main/resources/install.xml</input>
+                    <basedir>${project.basedir}</basedir>
+                    <output>${project.build.directory}/custom-installer.jar</output>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>
