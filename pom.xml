@@ -28,7 +28,6 @@
             <version>5.2.3</version>
             <scope>provided</scope>
         </dependency>
-		<dependencies>
 		<dependency>
 			<groupId>org.codehaus.izpack</groupId>
 			<artifactId>izpack-install</artifactId>
@@ -39,7 +38,7 @@
 			<artifactId>izpack-util</artifactId>
 			<version>5.2.3</version>
 		</dependency>
-</dependencies>
+	</dependencies>
 
     </dependencies>
 
