@@ -12,7 +12,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.util.List;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -78,10 +77,12 @@ public class XstProcessPanel extends IzPanel implements AbstractUIProcessHandler
         add(subpanel, BorderLayout.CENTER);
     }
 
+    @Override
     public boolean isValidated() {
         return this.validated;
     }
 
+    @Override
     public void startProcessing(final int noOfJobs) {
         this.noOfJobs = noOfJobs;
         SwingUtilities.invokeLater(new Runnable() {
@@ -93,6 +94,7 @@ public class XstProcessPanel extends IzPanel implements AbstractUIProcessHandler
         });
     }
 
+    @Override
     public void finishProcessing(final boolean unlockPrev, final boolean unlockNext) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -116,6 +118,7 @@ public class XstProcessPanel extends IzPanel implements AbstractUIProcessHandler
         });
     }
 
+    @Override
     public void logOutput(String message, boolean stderr) {
         final boolean stdError = stderr;
         final String logMessage = message;
@@ -142,6 +145,7 @@ public class XstProcessPanel extends IzPanel implements AbstractUIProcessHandler
         });
     }
 
+    @Override
     public void startProcess(final String jobName) {
         final StyledDocument doc = this.outputPane.getStyledDocument();
         final SimpleAttributeSet style = new SimpleAttributeSet();
@@ -163,6 +167,7 @@ public class XstProcessPanel extends IzPanel implements AbstractUIProcessHandler
         });
     }
 
+    @Override
     public void finishProcess() {
         final StyledDocument doc = this.outputPane.getStyledDocument();
         final SimpleAttributeSet style = new SimpleAttributeSet();
@@ -180,6 +185,7 @@ public class XstProcessPanel extends IzPanel implements AbstractUIProcessHandler
         });
     }
 }
+    @Override
     public void panelActivate() {
         Dimension dimension = this.parent.getPanelsContainerSize();
         dimension.width -= dimension.width / 4;
@@ -197,8 +203,10 @@ public class XstProcessPanel extends IzPanel implements AbstractUIProcessHandler
         }
     }
 
+    @Override
     public void makeXMLData(IXMLElement panelRoot) {}
 
+    @Override
     public void skipProcess(String name, String message) {
         this.processLabel.setText(name);
         this.currentJob++;
