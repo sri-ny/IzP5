@@ -26,7 +26,7 @@
             <groupId>org.codehaus.izpack</groupId>
             <artifactId>izpack-api</artifactId>
             <version>5.2.3</version>
-            <scope>provided</scope>
+            <!-- <scope>provided</scope> -->
         </dependency>
 		<dependency>
 			<groupId>org.codehaus.izpack</groupId>
@@ -38,6 +38,13 @@
 			<artifactId>izpack-util</artifactId>
 			<version>5.2.3</version>
 		</dependency>
+		<dependency>
+			<groupId>org.codehaus.izpack</groupId>
+			<artifactId>izpack-dist</artifactId>
+			<version>5.2.3</version>
+			<scope>compile</scope>
+		</dependency>
+
 	</dependencies>
 
     <build>
