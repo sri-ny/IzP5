@@ -27,7 +27,7 @@ jobs:
 
       - name: Compile Custom Panels
         run: |
-          javac -d target/classes $(find src/main/java/com/example -name "*.java")
+          javac -d target/classes $(find src\main\java\com\izforge\izpack\panels\xstprocess -name "*.java")
 
       - name: Package Custom Panels into JAR
         run: |
