@@ -17,7 +17,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
-          java-version: '11'
+          java-version: '7'
 
       - name: Create target directories
         run: |
@@ -27,7 +27,7 @@ jobs:
 
       - name: Compile Custom Panels
         run: |
-          find src/main/java/com/izforge/izpack/panels/xstprocess -name "*.java" -print0 | xargs -0 javac -d target/classes
+          javac -d target/classes -cp lib/izpack-dist-5.2.3.jar $(find src/main/java/com/izforge/izpack/panels/xstprocess -name "*.java")
 
       - name: Package Custom Panels into JAR
         run: |
@@ -40,9 +40,6 @@ jobs:
       - name: Build IzPack Installer
         run: |
           java -jar lib/izpack-dist-5.2.3.jar target/install.xml -b src -o target/installer/your-installer.jar
-        env:
-          JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/11.0.25-9/x64
-          JAVA_HOME_11_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/11.0.25-9/x64
 
       - name: List target directory
         run: ls -R target
