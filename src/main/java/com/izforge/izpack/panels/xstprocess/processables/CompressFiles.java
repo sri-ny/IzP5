@@ -1,5 +1,6 @@
 package com.izforge.izpack.panels.xstprocess.processables;
 
+import com.izforge.izpack.api.data.Variables;
 import com.izforge.izpack.panels.xstprocess.AbstractUIProcessHandler;
 import com.izforge.izpack.panels.xstprocess.Processable;
 import java.io.File;
@@ -35,7 +36,6 @@ public class CompressFiles extends Processable {
     public boolean run() {
         return zip();
     }
-
     public boolean zip() {
         this.zipFile = this.variables.replace(this.zipFile);
         try (FileOutputStream fos = new FileOutputStream(this.zipFile);
@@ -83,7 +83,6 @@ public class CompressFiles extends Processable {
 
         return true;
     }
-
     protected void addFileToZip(File sourceFile, String relativePath, ZipOutputStream zos) throws IOException {
         ZipEntry ze = new ZipEntry(relativePath);
         zos.putNextEntry(ze);

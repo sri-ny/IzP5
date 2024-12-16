@@ -39,9 +39,7 @@ public class ProcessingJob {
 
         for (Processable processable : this.processables) {
             handler.logOutput("\n<--------Start " + processable.getProcessableName() + " @ " + this.dateFormat.format(new Date()) + "---------->", false);
-
             boolean returnStatus = processable.run(handler, variables);
-
             handler.logOutput("<--------End " + processable.getProcessableName() + " @ " + this.dateFormat.format(new Date()) + "---------->", false);
 
             if (!returnStatus) {
@@ -52,7 +50,6 @@ public class ProcessingJob {
 
         return true;
     }
-
     class JobLogHandler implements AbstractUIProcessHandler {
         AbstractUIProcessHandler oldHandler;
         PrintWriter jobLogWriter;
@@ -101,7 +98,6 @@ public class ProcessingJob {
             writeToLog("ERROR EMITTED: " + message);
             this.oldHandler.emitErrorAndBlockNext(title, message);
         }
-
         @Override
         public int askQuestion(String title, String question, int choices) {
             return this.oldHandler.askQuestion(title, question, choices);
