@@ -3,7 +3,7 @@ name: Build IzPack Installer with Custom Panels
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   build:
@@ -27,7 +27,7 @@ jobs:
 
       - name: Compile Custom Panels
         run: |
-          javac -d target/classes -cp lib/izpack-dist-5.2.3.jar $(find src/main/java/com/izforge/izpack/panels/xstprocess -name "*.java")
+          javac -d target/classes -cp lib/izpack-dist-5.2.3.jar:lib/commons-configuration2-2.11.0.jar:lib/commons-io-2.18.0.jar $(find src/main/java/com/izforge/izpack/panels/xstprocess -name "*.java")
 
       - name: Package Custom Panels into JAR
         run: |
