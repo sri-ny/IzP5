@@ -78,141 +78,146 @@ public class XstProcessPanel extends IzPanel implements AbstractUIProcessHandler
         add(subpanel, BorderLayout.CENTER);
     }
 
-    @Override
     public boolean isValidated() {
         return this.validated;
     }
 
-    @Override
     public void startProcessing(final int noOfJobs) {
         this.noOfJobs = noOfJobs;
-        SwingUtilities.invokeLater(() -> {
-            overallProgressBar.setMaximum(noOfJobs);
-            overallProgressBar.setIndeterminate(true);
-            parent.lockPrevButton();
-        });
-    }
-    @Override
-    public void finishProcessing(final boolean unlockPrev, final boolean unlockNext) {
-        SwingUtilities.invokeLater(() -> {
-            overallProgressBar.setIndeterminate(false);
-            String noOfJobsStr = Integer.toString(noOfJobs);
-            overallProgressBar.setString(noOfJobsStr + " / " + noOfJobsStr);
-            processLabel.setText(" ");
-            processLabel.setEnabled(false);
-            validated = true;
-            installData.setInstallSuccess(worker.getResult());
-            if (installData.getPanels().indexOf(this) != installData.getPanels().size() - 1) {
-                if (unlockNext) {
-                    parent.unlockNextButton();
-                }
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                XstProcessPanel.this.overallProgressBar.setMaximum(noOfJobs);
+                XstProcessPanel.this.overallProgressBar.setIndeterminate(true);
+                XstProcessPanel.this.parent.lockPrevButton();
             }
-            if (unlockPrev) {
-                parent.unlockPrevButton();
-            }
-            finishedWork = installData.isInstallSuccess();
         });
     }
 
-    @Override
+    public void finishProcessing(final boolean unlockPrev, final boolean unlockNext) {
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                XstProcessPanel.this.overallProgressBar.setIndeterminate(false);
+                String noOfJobsStr = Integer.toString(XstProcessPanel.this.noOfJobs);
+                XstProcessPanel.this.overallProgressBar.setString(noOfJobsStr + " / " + noOfJobsStr);
+                XstProcessPanel.this.processLabel.setText(" ");
+                XstProcessPanel.this.processLabel.setEnabled(false);
+                XstProcessPanel.this.validated = true;
+                XstProcessPanel.this.installData.setInstallSuccess(XstProcessPanel.this.worker.getResult());
+                if (XstProcessPanel.this.installData.getPanels().indexOf(XstProcessPanel.this) != XstProcessPanel.this.installData.getPanels().size() - 1) {
+                    if (unlockNext) {
+                        XstProcessPanel.this.parent.unlockNextButton();
+                    }
+                }
+                if (unlockPrev) {
+                    XstProcessPanel.this.parent.unlockPrevButton();
+                }
+                XstProcessPanel.this.finishedWork = XstProcessPanel.this.installData.isInstallSuccess();
+            }
+        });
+    }
+
     public void logOutput(String message, boolean stderr) {
         final boolean stdError = stderr;
         final String logMessage = message;
-        final StyledDocument doc = outputPane.getStyledDocument();
+        final StyledDocument doc = this.outputPane.getStyledDocument();
         final SimpleAttributeSet style = new SimpleAttributeSet();
-        
-        SwingUtilities.invokeLater(() -> {
-            if (stdError) {
-                StyleConstants.setForeground(style, Color.RED);
-            }
-            try {
-                doc.insertString(doc.getLength(), "\n" + logMessage, style);
-            } catch (BadLocationException e) {
-                e.printStackTrace();
+
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                if (stdError) {
+                    StyleConstants.setForeground(style, Color.RED);
+                    try {
+                        doc.insertString(doc.getLength(), "\n" + logMessage, style);
+                    } catch (BadLocationException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    try {
+                        doc.insertString(doc.getLength(), "\n" + logMessage, style);
+                    } catch (BadLocationException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         });
     }
 
-    @Override
     public void startProcess(final String jobName) {
-        final StyledDocument doc = outputPane.getStyledDocument();
+        final StyledDocument doc = this.outputPane.getStyledDocument();
         final SimpleAttributeSet style = new SimpleAttributeSet();
         StyleConstants.setBold(style, true);
 
-        SwingUtilities.invokeLater(() -> {
-            processLabel.setText(jobName);
-            incrementCurrentJob();
-            overallProgressBar.setValue(currentJob);
-            overallProgressBar.setString(currentJob + " / " + noOfJobs);
-            String message = "->Starting Job: " + jobName + " <-";
-            try {
-                doc.insertString(doc.getLength(), "\n\n" + message, style);
-            } catch (BadLocationException e) {
-                e.printStackTrace();
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                XstProcessPanel.this.processLabel.setText(jobName);
+                XstProcessPanel.this.currentJob++;
+                XstProcessPanel.this.overallProgressBar.setValue(XstProcessPanel.this.currentJob);
+                XstProcessPanel.this.overallProgressBar.setString(String.valueOf(XstProcessPanel.this.currentJob) + " / " + String.valueOf(XstProcessPanel.this.noOfJobs));
+                String message = "->Starting Job: " + jobName + " <-";
+                try {
+                    doc.insertString(doc.getLength(), "\n\n" + message, style);
+                } catch (BadLocationException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
 
-    @Override
     public void finishProcess() {
-        final StyledDocument doc = outputPane.getStyledDocument();
+        final StyledDocument doc = this.outputPane.getStyledDocument();
         final SimpleAttributeSet style = new SimpleAttributeSet();
         StyleConstants.setBold(style, true);
 
-        SwingUtilities.invokeLater(() -> {
-            String message = "\n->Ended Job<-\n";
-            try {
-                doc.insertString(doc.getLength(), message, style);
-            } catch (BadLocationException e) {
-                e.printStackTrace();
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                String message = "\n->Ended Job<-\n";
+                try {
+                    doc.insertString(doc.getLength(), message, style);
+                } catch (BadLocationException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
-    @Override
+}
     public void panelActivate() {
-        Dimension dimension = parent.getPanelsContainerSize();
+        Dimension dimension = this.parent.getPanelsContainerSize();
         dimension.width -= dimension.width / 4;
         dimension.height = 150;
         setMinimumSize(dimension);
         setMaximumSize(dimension);
         setPreferredSize(dimension);
 
-        parent.lockNextButton();
+        this.parent.lockNextButton();
 
-        currentJob = 0;
+        this.currentJob = 0;
 
-        if (!finishedWork) {
-            worker.startThread();
+        if (!this.finishedWork) {
+            this.worker.startThread();
         }
     }
 
-    @Override
-    public void makeXMLData(IXMLElement panelRoot) {
-        // Implementation here if needed
-    }
+    public void makeXMLData(IXMLElement panelRoot) {}
 
-    @Override
     public void skipProcess(String name, String message) {
-        processLabel.setText(name);
-        incrementCurrentJob();
-        overallProgressBar.setValue(currentJob);
-        overallProgressBar.setString(currentJob + " / " + noOfJobs);
+        this.processLabel.setText(name);
+        this.currentJob++;
+        this.overallProgressBar.setValue(this.currentJob);
+        this.overallProgressBar.setString(String.valueOf(this.currentJob) + " / " + String.valueOf(this.noOfJobs));
 
-        final StyledDocument doc = outputPane.getStyledDocument();
+        final StyledDocument doc = this.outputPane.getStyledDocument();
         final SimpleAttributeSet style = new SimpleAttributeSet();
         StyleConstants.setBold(style, true);
 
-        SwingUtilities.invokeLater(() -> {
-            String skipMessage = "\n->Skipping job: " + name + "<-\nReason:" + message + "\n\n";
-            try {
-                doc.insertString(doc.getLength(), skipMessage, style);
-            } catch (BadLocationException e) {
-                e.printStackTrace();
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                String skipMessage = "\n->Skipping job: " + name + "<-\nReason:" + message + "\n\n";
+                try {
+                    doc.insertString(doc.getLength(), skipMessage, style);
+                } catch (BadLocationException e) {
+                    e.printStackTrace();
+                }
             }
         });
-    }
-
-    private void incrementCurrentJob() {
-        currentJob++;
     }
 }
