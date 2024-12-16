@@ -33,23 +33,24 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.izpack</groupId>
-                <artifactId>izpack-maven-plugin</artifactId>
-                <version>5.2.3</version>
-                <executions>
-                    <execution>
-                        <id>build-installer</id>
-                        <goals>
-                            <goal>standalone</goal>
-                        </goals>
-                        <phase>package</phase>
-                    </execution>
-                </executions>
-                <configuration>
-                    <installFile>${project.basedir}/src/main/resources/install.xml</installFile>
-                    <output>${project.build.directory}/custom-installer.jar</output>
-                </configuration>
-            </plugin>
+				<groupId>org.codehaus.izpack</groupId>
+				<artifactId>izpack-maven-plugin</artifactId>
+				<version>5.2.3</version>
+				<executions>
+					<execution>
+						<id>build-installer</id>
+						<goals>
+							<goal>izpack</goal> <!-- Use 'izpack' as the goal -->
+						</goals>
+						<phase>package</phase>
+					</execution>
+				</executions>
+				<configuration>
+					<input>${project.basedir}/src/main/resources/install.xml</input>
+					<basedir>${project.basedir}</basedir>
+					<output>${project.build.directory}/custom-installer.jar</output>
+				</configuration>
+			</plugin>
         </plugins>
     </build>
 </project>
