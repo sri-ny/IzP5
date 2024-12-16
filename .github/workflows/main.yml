@@ -1,10 +1,7 @@
-name: Build IzPack Installer
+name: Build IzPack Installer with Custom Panels
 
 on:
   push:
-    branches:
-      - main
-  pull_request:
     branches:
       - main
 
@@ -13,28 +10,52 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Set up Java
-      uses: actions/setup-java@v3
-      with:
-        java-version: '8'
-        distribution: 'temurin'
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '11'
 
-    - name: Cache Maven Repository
-      uses: actions/cache@v3
-      with:
-        path: ~/.m2
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-maven-
+      - name: Create target directories
+        run: |
+          mkdir -p target/classes
+          mkdir -p target/jar
+          mkdir -p target/installer
 
-    - name: Build Installer
-      run: mvn clean package
+      - name: Compile Custom Panels
+        run: |
+          javac -d target/classes $(find src/main/java/com/example -name "*.java")
 
-    - name: Upload Installer Artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: custom-installer
-        path: target/custom-installer.jar
+      - name: Package Custom Panels into JAR
+        run: |
+          jar cf target/jar/izpack-panels.jar -C target/classes .
+
+      - name: Ensure Installation Descriptor
+        run: |
+          cp src/main/resources/install.xml target/install.xml
+
+      - name: Build IzPack Installer
+        run: |
+          java -jar lib/izpack-dist-5.2.3.jar target/install.xml -b src -o target/installer/your-installer.jar
+        env:
+          JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/11.0.25-9/x64
+          JAVA_HOME_11_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/11.0.25-9/x64
+
+      - name: List target directory
+        run: ls -R target
+
+      - name: Upload Build Log
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: build.log
+
+      - name: Upload Installer
+        uses: actions/upload-artifact@v4
+        with:
+          name: izpack-installer
+          path: target/installer/your-installer.jar
+          if-no-files-found: error
