@@ -10,8 +10,6 @@ import com.izforge.izpack.installer.automation.PanelAutomation;
 import com.izforge.izpack.installer.automation.PanelAutomationHelper;
 import com.izforge.izpack.util.PlatformModelMatcher;
 
-import java.io.PrintStream;
-
 public class ProcessPanelAutomation extends PanelAutomationHelper implements PanelAutomation, AbstractUIProcessHandler {
     private int noOfJobs = 0;
     private int currentJob = 0;
