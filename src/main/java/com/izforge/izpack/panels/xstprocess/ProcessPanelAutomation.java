@@ -37,6 +37,7 @@ public class ProcessPanelAutomation extends PanelAutomationHelper implements Pan
     public void processOptions(InstallData installData, Options options) {
         // Implement the abstract method from PanelAutomation
     }
+
     @Override
     public void logOutput(String message, boolean stderr) {
         if (stderr) {

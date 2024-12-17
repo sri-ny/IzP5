@@ -3,10 +3,10 @@ package com.izforge.izpack.panels.xstprocess.processables;
 import com.izforge.izpack.api.data.Variables;
 import com.izforge.izpack.panels.xstprocess.AbstractUIProcessHandler;
 import com.izforge.izpack.panels.xstprocess.Processable;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -62,7 +62,10 @@ public class RunDatabaseScript extends Processable {
         }
 
         this.handler.logOutput("\nStarting execution of sql lines:", false);
+        return executeSqlScript(dbConnection);
+    }
 
+    private boolean executeSqlScript(Connection dbConnection) {
         for (SqlLine line : this.sqlScript) {
             Statement sqlStatement;
             try {
@@ -76,10 +79,10 @@ public class RunDatabaseScript extends Processable {
             }
 
             String sqlLine = this.variables.replace(line.getSqlStatement());
-
             ResultSet results = null;
             try {
                 this.handler.logOutput("Executing: " + sqlLine, false);
+
                 if (line.wantsResults()) {
                     results = sqlStatement.executeQuery(sqlLine);
                 } else {
@@ -93,45 +96,49 @@ public class RunDatabaseScript extends Processable {
                 return false;
             }
 
-            if (line.wantsResults()) {
-                String resultVar = line.getResultVar();
-                int rowCount = 0;
-
-                HashMap<String, String> loadedResults = new HashMap<>();
-
-                try {
-                    int columnCount = results.getMetaData().getColumnCount();
-                    List<String> columnNames = new ArrayList<>();
-                    for (int i = 1; i <= columnCount; i++) {
-                        String columnName = results.getMetaData().getColumnLabel(i);
-                        columnNames.add(columnName);
-                    }
-                    while (results.next()) {
-                        for (int i = 1; i <= columnCount; i++) {
-                            String columnValue = results.getString(i);
-                            String uniqueVarName = resultVar + rowCount + "_" + columnNames.get(i - 1);
-                            loadedResults.put(uniqueVarName, columnValue);
-                            rowCount++;
-                        }
-                    }
-
-                    String rowCountVar = resultVar + "_" + rowCount;
-                    this.variables.set(rowCountVar, "" + rowCount);
-                    this.handler.logOutput("Row count of " + rowCount + " set in " + rowCountVar, false);
-
-                    for (String key : loadedResults.keySet()) {
-                        String hashValue = loadedResults.get(key);
-                        this.variables.set(key, hashValue);
-                        this.handler.logOutput(key + " = " + hashValue, false);
-                    }
-                } catch (SQLException e) {
-                    this.handler.logOutput("Error loading results....", true);
-                    e.printStackTrace();
-                    return false;
-                }
+            if (line.wantsResults() && !processResults(line, results)) {
+                return false;
             }
         }
+        return true;
+    }
 
+    private boolean processResults(SqlLine line, ResultSet results) {
+        String resultVar = line.getResultVar();
+        int rowCount = 0;
+        HashMap<String, String> loadedResults = new HashMap<>();
+
+        try {
+            int columnCount = results.getMetaData().getColumnCount();
+            List<String> columnNames = new ArrayList<>();
+            for (int i = 1; i <= columnCount; i++) {
+                String columnName = results.getMetaData().getColumnLabel(i);
+                columnNames.add(columnName);
+            }
+
+            while (results.next()) {
+                for (int i = 1; i <= columnCount; i++) {
+                    String columnValue = results.getString(i);
+                    String uniqueVarName = resultVar + rowCount + "_" + columnNames.get(i - 1);
+                    loadedResults.put(uniqueVarName, columnValue);
+                    rowCount++;
+                }
+            }
+
+            String rowCountVar = resultVar + "_" + rowCount;
+            this.variables.set(rowCountVar, "" + rowCount);
+            this.handler.logOutput("Row count of " + rowCount + " set in " + rowCountVar, false);
+
+            for (String key : loadedResults.keySet()) {
+                String hashValue = loadedResults.get(key);
+                this.variables.set(key, hashValue);
+                this.handler.logOutput(key + " = " + hashValue, false);
+            }
+        } catch (SQLException e) {
+            this.handler.logOutput("Error loading results....", true);
+            e.printStackTrace();
+            return false;
+        }
         return true;
     }
 
@@ -145,7 +152,6 @@ public class RunDatabaseScript extends Processable {
 
         public SqlLine(String sqlStatement, String resultVar) {
             this.sqlStatement = sqlStatement;
-
             if ((resultVar == null) || (resultVar.isEmpty())) {
                 resultVar = null;
             } else {
