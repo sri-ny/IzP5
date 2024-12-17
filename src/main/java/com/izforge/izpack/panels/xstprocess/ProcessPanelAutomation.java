@@ -1,7 +1,7 @@
 package com.izforge.izpack.panels.xstprocess;
 
 import com.izforge.izpack.api.adaptator.IXMLElement;
-import com.izforge.izpack.api.config.Overrides; // Ensure this import is correct
+import com.izforge.izpack.api.config.Options; // Correct import
 import com.izforge.izpack.api.data.InstallData;
 import com.izforge.izpack.api.exception.InstallerException;
 import com.izforge.izpack.api.resource.Resources;
@@ -9,8 +9,6 @@ import com.izforge.izpack.api.rules.RulesEngine;
 import com.izforge.izpack.installer.automation.PanelAutomation;
 import com.izforge.izpack.installer.automation.PanelAutomationHelper;
 import com.izforge.izpack.util.PlatformModelMatcher;
-
-import java.io.PrintStream;
 
 public class ProcessPanelAutomation extends PanelAutomationHelper implements PanelAutomation, AbstractUIProcessHandler {
     private int noOfJobs = 0;
@@ -34,7 +32,7 @@ public class ProcessPanelAutomation extends PanelAutomationHelper implements Pan
     }
 
     @Override
-    public void processOptions(InstallData installData, Overrides overrides) {
+    public void processOptions(InstallData installData, Options options) {
         // Implement the abstract method from PanelAutomation
     }
 
